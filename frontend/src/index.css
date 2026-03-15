@@ -1,0 +1,53 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(160deg, #f3f6f9 0%, #ffffff 45%, #eaf5ff 100%);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.auth-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 14px;
+  box-shadow: 0 14px 34px rgba(9, 30, 66, 0.14);
+}
+
+.brand {
+  height: 64px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  color: #1f2a44;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  border-bottom: 1px solid #e8edf3;
+}
+
+.content-wrap {
+  padding: 24px;
+}
+
+.loading-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+}
