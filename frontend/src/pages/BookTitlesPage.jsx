@@ -18,7 +18,7 @@ export default function BookTitlesPage() {
       setRows(titlesRes.data);
       setMajors(majorsRes.data);
     } catch (error) {
-      message.error(error?.response?.data?.detail || "Khong tai duoc du lieu dau sach");
+      message.error(error?.response?.data?.detail || "Không tải được dữ liệu đầu sách");
     } finally {
       setLoading(false);
     }
@@ -48,47 +48,47 @@ export default function BookTitlesPage() {
     try {
       if (editing) {
         await api.patch(`/book-titles/${editing.id}`, values);
-        message.success("Cap nhat dau sach thanh cong");
+        message.success("Cập nhật đầu sách thành công");
       } else {
         await api.post("/book-titles", values);
-        message.success("Them dau sach thanh cong");
+        message.success("Thêm đầu sách thành công");
       }
       setOpen(false);
       await loadData();
     } catch (error) {
-      message.error(error?.response?.data?.detail || "Luu dau sach that bai");
+      message.error(error?.response?.data?.detail || "Lưu đầu sách thất bại");
     }
   };
 
   const onDelete = async (id) => {
     try {
       await api.delete(`/book-titles/${id}`);
-      message.success("Da xoa dau sach");
+      message.success("Đã xóa đầu sách");
       await loadData();
     } catch (error) {
-      message.error(error?.response?.data?.detail || "Xoa dau sach that bai");
+      message.error(error?.response?.data?.detail || "Xóa đầu sách thất bại");
     }
   };
 
   const columns = [
-    { title: "Ma dau", dataIndex: "code" },
-    { title: "Ten dau sach", dataIndex: "name" },
-    { title: "Tac gia", dataIndex: "author" },
-    { title: "Nha xuat ban", dataIndex: "publisher" },
-    { title: "So trang", dataIndex: "pages" },
-    { title: "Kich thuoc", dataIndex: "size" },
-    { title: "So luong", dataIndex: "total_quantity" },
-    { title: "Chuyen nganh", dataIndex: "major_id", render: (value) => majorNameById(value) },
+    { title: "Mã đầu", dataIndex: "code" },
+    { title: "Tên đầu sách", dataIndex: "name" },
+    { title: "Tác giả", dataIndex: "author" },
+    { title: "Nhà xuất bản", dataIndex: "publisher" },
+    { title: "Số trang", dataIndex: "pages" },
+    { title: "Kích thước", dataIndex: "size" },
+    { title: "Số lượng", dataIndex: "total_quantity" },
+    { title: "Chuyên ngành", dataIndex: "major_id", render: (value) => majorNameById(value) },
     {
-      title: "Thao tac",
+      title: "Thao tác",
       render: (_, record) => (
         <Space>
           <Button size="small" onClick={() => openEdit(record)}>
-            Sua
+            Sửa
           </Button>
-          <Popconfirm title="Xoa dau sach nay?" onConfirm={() => onDelete(record.id)}>
+          <Popconfirm title="Xóa đầu sách này?" onConfirm={() => onDelete(record.id)}>
             <Button size="small" danger>
-              Xoa
+              Xóa
             </Button>
           </Popconfirm>
         </Space>
@@ -98,59 +98,59 @@ export default function BookTitlesPage() {
 
   return (
     <div>
-      <Space style={{ marginBottom: 16, width: "100%", justifyContent: "space-between" }}>
-        <Typography.Title level={3} style={{ margin: 0 }}>
-          Quan ly dau sach
+      <Space className="page-toolbar">
+        <Typography.Title level={3} className="page-heading">
+          Quản lý đầu sách
         </Typography.Title>
         <Button type="primary" onClick={openCreate}>
-          Them dau sach
+          Thêm đầu sách
         </Button>
       </Space>
       <Table rowKey="id" columns={columns} dataSource={rows} loading={loading} scroll={{ x: 1100 }} />
 
       <Modal
         open={open}
-        title={editing ? "Cap nhat dau sach" : "Them dau sach"}
+        title={editing ? "Cập nhật đầu sách" : "Thêm đầu sách"}
         onCancel={() => setOpen(false)}
         onOk={onSubmit}
-        okText="Luu"
+        okText="Lưu"
         width={760}
       >
         <Form form={form} layout="vertical">
           <Space style={{ width: "100%" }} size={12}>
-            <Form.Item name="code" label="Ma dau sach" rules={[{ required: true }]} style={{ flex: 1 }}>
+            <Form.Item name="code" label="Mã đầu sách" rules={[{ required: true }]} style={{ flex: 1 }}>
               <Input disabled={Boolean(editing)} />
             </Form.Item>
-            <Form.Item name="name" label="Ten dau sach" rules={[{ required: true }]} style={{ flex: 2 }}>
+            <Form.Item name="name" label="Tên đầu sách" rules={[{ required: true }]} style={{ flex: 2 }}>
               <Input />
             </Form.Item>
           </Space>
 
           <Space style={{ width: "100%" }} size={12}>
-            <Form.Item name="author" label="Tac gia" rules={[{ required: true }]} style={{ flex: 1 }}>
+            <Form.Item name="author" label="Tác giả" rules={[{ required: true }]} style={{ flex: 1 }}>
               <Input />
             </Form.Item>
-            <Form.Item name="publisher" label="Nha xuat ban" rules={[{ required: true }]} style={{ flex: 1 }}>
+            <Form.Item name="publisher" label="Nhà xuất bản" rules={[{ required: true }]} style={{ flex: 1 }}>
               <Input />
             </Form.Item>
           </Space>
 
           <Space style={{ width: "100%" }} size={12}>
-            <Form.Item name="pages" label="So trang" rules={[{ required: true }]} style={{ flex: 1 }}>
+            <Form.Item name="pages" label="Số trang" rules={[{ required: true }]} style={{ flex: 1 }}>
               <InputNumber min={1} style={{ width: "100%" }} />
             </Form.Item>
-            <Form.Item name="size" label="Kich thuoc" rules={[{ required: true }]} style={{ flex: 1 }}>
+            <Form.Item name="size" label="Kích thước" rules={[{ required: true }]} style={{ flex: 1 }}>
               <Input placeholder="13x20 cm" />
             </Form.Item>
-            <Form.Item name="total_quantity" label="So luong" rules={[{ required: true }]} style={{ flex: 1 }}>
+            <Form.Item name="total_quantity" label="Số lượng" rules={[{ required: true }]} style={{ flex: 1 }}>
               <InputNumber min={0} style={{ width: "100%" }} />
             </Form.Item>
           </Space>
 
-          <Form.Item name="major_id" label="Chuyen nganh" rules={[{ required: true }]}>
+          <Form.Item name="major_id" label="Chuyên ngành" rules={[{ required: true }]}>
             <Select
               options={majors.map((item) => ({ value: item.id, label: `${item.code} - ${item.name}` }))}
-              placeholder="Chon chuyen nganh"
+              placeholder="Chọn chuyên ngành"
             />
           </Form.Item>
         </Form>

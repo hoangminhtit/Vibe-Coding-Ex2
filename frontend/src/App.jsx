@@ -1,7 +1,18 @@
+import {
+  AppstoreOutlined,
+  BarChartOutlined,
+  BookOutlined,
+  DashboardOutlined,
+  FileTextOutlined,
+  ReadOutlined,
+  TeamOutlined,
+  UserSwitchOutlined,
+} from "@ant-design/icons";
 import { Button, Layout, Menu, Spin, Typography } from "antd";
 import { Navigate, Outlet, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 import { useAuth } from "./context/AuthContext";
+import "./App.css";
 import BookCopiesPage from "./pages/BookCopiesPage";
 import BookTitlesPage from "./pages/BookTitlesPage";
 import BorrowsPage from "./pages/BorrowsPage";
@@ -33,24 +44,31 @@ function PrivateLayout() {
   }
 
   const menuItems = [
-    { key: "/", label: "Dashboard" },
-    { key: "/readers", label: "Doc gia" },
-    { key: "/majors", label: "Chuyen nganh" },
-    { key: "/book-titles", label: "Dau sach" },
-    { key: "/book-copies", label: "Ban sao" },
-    { key: "/borrows", label: "Muon/Tra" },
-    { key: "/reports", label: "Bao cao" },
+    { key: "/", label: "Dashboard", icon: <DashboardOutlined /> },
+    { key: "/readers", label: "Độc giả", icon: <TeamOutlined /> },
+    { key: "/majors", label: "Chuyên ngành", icon: <AppstoreOutlined /> },
+    { key: "/book-titles", label: "Đầu sách", icon: <ReadOutlined /> },
+    { key: "/book-copies", label: "Bản sao", icon: <BookOutlined /> },
+    { key: "/borrows", label: "Mượn/Trả", icon: <FileTextOutlined /> },
+    { key: "/reports", label: "Báo cáo", icon: <BarChartOutlined /> },
   ];
 
   if (auth.user?.role === "ADMIN") {
-    menuItems.push({ key: "/users", label: "Nhan vien" });
+    menuItems.push({ key: "/users", label: "Nhân viên", icon: <UserSwitchOutlined /> });
   }
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
-      <Sider breakpoint="lg" collapsedWidth="0" theme="light">
-        <div className="brand">Library App</div>
+    <Layout className="app-shell">
+      <Sider breakpoint="lg" collapsedWidth="0" width={260} theme="light" className="app-sider">
+        <div className="brand">
+          <span className="brand-mark">LB</span>
+          <div>
+            <Typography.Text strong>Library Hub</Typography.Text>
+            <Typography.Text type="secondary">Academic circulation desk</Typography.Text>
+          </div>
+        </div>
         <Menu
+          className="app-menu"
           mode="inline"
           selectedKeys={[location.pathname]}
           items={menuItems}
@@ -59,16 +77,25 @@ function PrivateLayout() {
       </Sider>
       <Layout>
         <Header className="topbar">
-          <Typography.Title level={4} style={{ margin: 0 }}>
-            He thong quan ly thu vien
-          </Typography.Title>
-          <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-            <Typography.Text>{auth.user?.full_name || ""}</Typography.Text>
-            <Button onClick={auth.logout}>Dang xuat</Button>
+          <div>
+            <Typography.Title level={4} style={{ margin: 0 }}>
+              Hệ thống quản lý thư viện
+            </Typography.Title>
+            <Typography.Text type="secondary">Quản lý đầu sách, độc giả và lưu thông một nơi</Typography.Text>
+          </div>
+          <div className="topbar-actions">
+            <div className="user-chip">
+              <span>{auth.user?.full_name || ""}</span>
+            </div>
+            <Button type="primary" ghost onClick={auth.logout}>
+              Đăng xuất
+            </Button>
           </div>
         </Header>
         <Content className="content-wrap">
-          <Outlet />
+          <div className="content-surface">
+            <Outlet />
+          </div>
         </Content>
       </Layout>
     </Layout>

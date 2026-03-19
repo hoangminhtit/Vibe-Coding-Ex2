@@ -21,7 +21,7 @@ export default function BookCopiesPage() {
       setRows(copiesRes.data);
       setTitles(titlesRes.data);
     } catch (error) {
-      message.error(error?.response?.data?.detail || "Khong tai duoc ban sao sach");
+      message.error(error?.response?.data?.detail || "Không tải được bản sao sách");
     } finally {
       setLoading(false);
     }
@@ -59,7 +59,7 @@ export default function BookCopiesPage() {
         await api.patch(`/book-copies/${editing.id}`, {
           status: values.status,
         });
-        message.success("Cap nhat ban sao thanh cong");
+        message.success("Cập nhật bản sao thành công");
       } else {
         await api.post("/book-copies", {
           copy_code: values.copy_code,
@@ -67,48 +67,48 @@ export default function BookCopiesPage() {
           status: values.status,
           imported_at: values.imported_at.toISOString(),
         });
-        message.success("Them ban sao thanh cong");
+        message.success("Thêm bản sao thành công");
       }
       setOpen(false);
       await loadData();
     } catch (error) {
-      message.error(error?.response?.data?.detail || "Luu ban sao that bai");
+      message.error(error?.response?.data?.detail || "Lưu bản sao thất bại");
     }
   };
 
   const onDelete = async (id) => {
     try {
       await api.delete(`/book-copies/${id}`);
-      message.success("Da xoa ban sao");
+      message.success("Đã xóa bản sao");
       await loadData();
     } catch (error) {
-      message.error(error?.response?.data?.detail || "Xoa ban sao that bai");
+      message.error(error?.response?.data?.detail || "Xóa bản sao thất bại");
     }
   };
 
   const columns = [
-    { title: "Ma sach", dataIndex: "copy_code" },
-    { title: "Dau sach", dataIndex: "title_id", render: (value) => titleNameById(value) },
+    { title: "Mã sách", dataIndex: "copy_code" },
+    { title: "Đầu sách", dataIndex: "title_id", render: (value) => titleNameById(value) },
     {
-      title: "Tinh trang",
+      title: "Tình trạng",
       dataIndex: "status",
       render: (value) => <Tag>{value}</Tag>,
     },
     {
-      title: "Ngay nhap",
+      title: "Ngày nhập",
       dataIndex: "imported_at",
       render: (value) => dayjs(value).format("DD/MM/YYYY"),
     },
     {
-      title: "Thao tac",
+      title: "Thao tác",
       render: (_, record) => (
         <Space>
           <Button size="small" onClick={() => openEdit(record)}>
-            Sua
+            Sửa
           </Button>
-          <Popconfirm title="Xoa ban sao nay?" onConfirm={() => onDelete(record.id)}>
+          <Popconfirm title="Xóa bản sao này?" onConfirm={() => onDelete(record.id)}>
             <Button size="small" danger>
-              Xoa
+              Xóa
             </Button>
           </Popconfirm>
         </Space>
@@ -118,39 +118,39 @@ export default function BookCopiesPage() {
 
   return (
     <div>
-      <Space style={{ marginBottom: 16, width: "100%", justifyContent: "space-between" }}>
-        <Typography.Title level={3} style={{ margin: 0 }}>
-          Quan ly ban sao sach
+      <Space className="page-toolbar">
+        <Typography.Title level={3} className="page-heading">
+          Quản lý bản sao sách
         </Typography.Title>
         <Button type="primary" onClick={openCreate}>
-          Them ban sao
+          Thêm bản sao
         </Button>
       </Space>
       <Table rowKey="id" columns={columns} dataSource={rows} loading={loading} />
 
       <Modal
         open={open}
-        title={editing ? "Cap nhat ban sao" : "Them ban sao"}
+        title={editing ? "Cập nhật bản sao" : "Thêm bản sao"}
         onCancel={() => setOpen(false)}
         onOk={onSubmit}
-        okText="Luu"
+        okText="Lưu"
       >
         <Form form={form} layout="vertical">
-          <Form.Item name="copy_code" label="Ma sach" rules={[{ required: true }]}>
+          <Form.Item name="copy_code" label="Mã sách" rules={[{ required: true }]}>
             <Input disabled={Boolean(editing)} />
           </Form.Item>
-          <Form.Item name="title_id" label="Dau sach" rules={[{ required: true }]}>
+          <Form.Item name="title_id" label="Đầu sách" rules={[{ required: true }]}>
             <Select
               disabled={Boolean(editing)}
               options={titles.map((item) => ({ value: item.id, label: `${item.code} - ${item.name}` }))}
             />
           </Form.Item>
           {!editing ? (
-            <Form.Item name="imported_at" label="Ngay nhap" rules={[{ required: true }]}>
+            <Form.Item name="imported_at" label="Ngày nhập" rules={[{ required: true }]}>
               <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
             </Form.Item>
           ) : null}
-          <Form.Item name="status" label="Tinh trang" rules={[{ required: true }]}>
+          <Form.Item name="status" label="Tình trạng" rules={[{ required: true }]}>
             <Select options={statusOptions.map((item) => ({ value: item, label: item }))} />
           </Form.Item>
         </Form>

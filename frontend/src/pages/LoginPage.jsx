@@ -20,7 +20,7 @@ export default function LoginPage() {
       auth.login(response.data.access_token);
       navigate("/", { replace: true });
     } catch (err) {
-      setError(err?.response?.data?.detail || "Dang nhap that bai");
+      setError(err?.response?.data?.detail || "Đăng nhập thất bại");
     } finally {
       setLoading(false);
     }
@@ -28,26 +28,46 @@ export default function LoginPage() {
 
   return (
     <div className="auth-shell">
-      <Card className="auth-card" variant="outlined">
-        <Typography.Title level={2}>Library Management</Typography.Title>
-        <Typography.Paragraph>
-          Dang nhap voi tai khoan thu thu hoac quan tri.
-        </Typography.Paragraph>
+      <div className="auth-grid">
+        <div className="auth-hero">
+          <div>
+            <Typography.Text>Library Hub Platform</Typography.Text>
+            <h2>Vận hành thư viện gọn gàng, rõ ràng và nhanh hơn.</h2>
+            <p>Theo dõi độc giả, đầu sách, mượn trả và báo cáo thống kê trong cùng một hệ thống.</p>
+          </div>
+          <div className="auth-kpis">
+            <div className="auth-kpi">
+              <strong>24/7</strong>
+              <span>Thông tin sẵn sàng tra cứu</span>
+            </div>
+            <div className="auth-kpi">
+              <strong>1 tập trung</strong>
+              <span>Độc giả, sách, nhân viên</span>
+            </div>
+          </div>
+        </div>
 
-        {error ? <Alert type="error" showIcon message={error} style={{ marginBottom: 16 }} /> : null}
+        <Card className="auth-card" variant="borderless">
+          <Typography.Title level={2}>Đăng nhập hệ thống</Typography.Title>
+          <Typography.Paragraph>
+            Sử dụng tài khoản thủ thư hoặc quản trị để tiếp tục.
+          </Typography.Paragraph>
 
-        <Form layout="vertical" onFinish={onFinish}>
-          <Form.Item label="Username" name="username" rules={[{ required: true }]}> 
-            <Input placeholder="admin" />
-          </Form.Item>
-          <Form.Item label="Password" name="password" rules={[{ required: true }]}> 
-            <Input.Password placeholder="admin123" />
-          </Form.Item>
-          <Button htmlType="submit" type="primary" block loading={loading}>
-            Dang nhap
-          </Button>
-        </Form>
-      </Card>
+          {error ? <Alert type="error" showIcon message={error} style={{ marginBottom: 16 }} /> : null}
+
+          <Form layout="vertical" onFinish={onFinish}>
+            <Form.Item label="Username" name="username" rules={[{ required: true }]}>
+              <Input placeholder="admin" />
+            </Form.Item>
+            <Form.Item label="Password" name="password" rules={[{ required: true }]}>
+              <Input.Password placeholder="admin123" />
+            </Form.Item>
+            <Button htmlType="submit" type="primary" block loading={loading}>
+              Đăng nhập
+            </Button>
+          </Form>
+        </Card>
+      </div>
     </div>
   );
 }

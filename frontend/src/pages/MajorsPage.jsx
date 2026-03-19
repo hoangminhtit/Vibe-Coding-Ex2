@@ -16,7 +16,7 @@ export default function MajorsPage() {
       const response = await api.get("/majors");
       setRows(response.data);
     } catch (error) {
-      message.error(error?.response?.data?.detail || "Khong tai duoc chuyen nganh");
+      message.error(error?.response?.data?.detail || "Không tải được chuyên ngành");
     } finally {
       setLoading(false);
     }
@@ -43,42 +43,42 @@ export default function MajorsPage() {
     try {
       if (editing) {
         await api.patch(`/majors/${editing.id}`, values);
-        message.success("Cap nhat chuyen nganh thanh cong");
+        message.success("Cập nhật chuyên ngành thành công");
       } else {
         await api.post("/majors", values);
-        message.success("Them chuyen nganh thanh cong");
+        message.success("Thêm chuyên ngành thành công");
       }
       setOpen(false);
       await loadData();
     } catch (error) {
-      message.error(error?.response?.data?.detail || "Luu chuyen nganh that bai");
+      message.error(error?.response?.data?.detail || "Lưu chuyên ngành thất bại");
     }
   };
 
   const onDelete = async (id) => {
     try {
       await api.delete(`/majors/${id}`);
-      message.success("Da xoa chuyen nganh");
+      message.success("Đã xóa chuyên ngành");
       await loadData();
     } catch (error) {
-      message.error(error?.response?.data?.detail || "Xoa chuyen nganh that bai");
+      message.error(error?.response?.data?.detail || "Xóa chuyên ngành thất bại");
     }
   };
 
   const columns = [
-    { title: "Ma chuyen nganh", dataIndex: "code" },
-    { title: "Ten chuyen nganh", dataIndex: "name" },
-    { title: "Mo ta", dataIndex: "description" },
+    { title: "Mã chuyên ngành", dataIndex: "code" },
+    { title: "Tên chuyên ngành", dataIndex: "name" },
+    { title: "Mô tả", dataIndex: "description" },
     {
-      title: "Thao tac",
+      title: "Thao tác",
       render: (_, record) => (
         <Space>
           <Button size="small" onClick={() => openEdit(record)}>
-            Sua
+            Sửa
           </Button>
-          <Popconfirm title="Xoa chuyen nganh nay?" onConfirm={() => onDelete(record.id)}>
+          <Popconfirm title="Xóa chuyên ngành này?" onConfirm={() => onDelete(record.id)}>
             <Button size="small" danger>
-              Xoa
+              Xóa
             </Button>
           </Popconfirm>
         </Space>
@@ -88,31 +88,31 @@ export default function MajorsPage() {
 
   return (
     <div>
-      <Space style={{ marginBottom: 16, width: "100%", justifyContent: "space-between" }}>
-        <Typography.Title level={3} style={{ margin: 0 }}>
-          Quan ly chuyen nganh
+      <Space className="page-toolbar">
+        <Typography.Title level={3} className="page-heading">
+          Quản lý chuyên ngành
         </Typography.Title>
         <Button type="primary" onClick={openCreate}>
-          Them chuyen nganh
+          Thêm chuyên ngành
         </Button>
       </Space>
       <Table rowKey="id" columns={columns} dataSource={rows} loading={loading} />
 
       <Modal
         open={open}
-        title={editing ? "Cap nhat chuyen nganh" : "Them chuyen nganh"}
+        title={editing ? "Cập nhật chuyên ngành" : "Thêm chuyên ngành"}
         onCancel={() => setOpen(false)}
         onOk={onSubmit}
-        okText="Luu"
+        okText="Lưu"
       >
         <Form form={form} layout="vertical">
-          <Form.Item name="code" label="Ma chuyen nganh" rules={[{ required: true }]}>
+          <Form.Item name="code" label="Mã chuyên ngành" rules={[{ required: true }]}>
             <Input disabled={Boolean(editing)} />
           </Form.Item>
-          <Form.Item name="name" label="Ten chuyen nganh" rules={[{ required: true }]}>
+          <Form.Item name="name" label="Tên chuyên ngành" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="description" label="Mo ta">
+          <Form.Item name="description" label="Mô tả">
             <Input.TextArea rows={3} />
           </Form.Item>
         </Form>

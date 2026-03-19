@@ -27,7 +27,7 @@ export default function BorrowsPage() {
       setReaders(readersRes.data.filter((item) => item.is_active));
       setCopies(copiesRes.data);
     } catch (error) {
-      message.error(error?.response?.data?.detail || "Khong tai duoc du lieu muon/tra");
+      message.error(error?.response?.data?.detail || "Không tải được dữ liệu mượn/trả");
     } finally {
       setLoading(false);
     }
@@ -50,11 +50,11 @@ export default function BorrowsPage() {
         borrowed_at: values.borrowed_at.toISOString(),
         condition: values.condition,
       });
-      message.success("Lap phieu muon thanh cong");
+      message.success("Lập phiếu mượn thành công");
       setOpenBorrow(false);
       await loadData();
     } catch (error) {
-      message.error(error?.response?.data?.detail || "Lap phieu muon that bai");
+      message.error(error?.response?.data?.detail || "Lập phiếu mượn thất bại");
     }
   };
 
@@ -72,40 +72,40 @@ export default function BorrowsPage() {
         status: values.status,
         condition: values.condition,
       });
-      message.success("Tra sach thanh cong");
+      message.success("Trả sách thành công");
       setOpenReturn(false);
       await loadData();
     } catch (error) {
-      message.error(error?.response?.data?.detail || "Tra sach that bai");
+      message.error(error?.response?.data?.detail || "Trả sách thất bại");
     }
   };
 
   const columns = [
-    { title: "Ma phieu", dataIndex: "id" },
-    { title: "Doc gia", dataIndex: "reader_id", render: (value) => readerLabelById(value) },
-    { title: "Ma sach", dataIndex: "copy_id", render: (value) => copyLabelById(value) },
+    { title: "Mã phiếu", dataIndex: "id" },
+    { title: "Độc giả", dataIndex: "reader_id", render: (value) => readerLabelById(value) },
+    { title: "Mã sách", dataIndex: "copy_id", render: (value) => copyLabelById(value) },
     {
-      title: "Ngay muon",
+      title: "Ngày mượn",
       dataIndex: "borrowed_at",
       render: (value) => dayjs(value).format("DD/MM/YYYY HH:mm"),
     },
     {
-      title: "Ngay tra",
+      title: "Ngày trả",
       dataIndex: "returned_at",
       render: (value) => (value ? dayjs(value).format("DD/MM/YYYY HH:mm") : "-"),
     },
-    { title: "Tinh trang", dataIndex: "condition" },
+    { title: "Tình trạng", dataIndex: "condition" },
     {
-      title: "Trang thai",
+      title: "Trạng thái",
       dataIndex: "status",
       render: (value) => <Tag color={value === "BORROWING" ? "blue" : "green"}>{value}</Tag>,
     },
     {
-      title: "Thao tac",
+      title: "Thao tác",
       render: (_, record) =>
         record.status === "BORROWING" ? (
           <Button size="small" onClick={() => openReturnModal(record)}>
-            Tra sach
+            Trả sách
           </Button>
         ) : null,
     },
@@ -113,9 +113,9 @@ export default function BorrowsPage() {
 
   return (
     <div>
-      <Space style={{ marginBottom: 16, width: "100%", justifyContent: "space-between" }}>
-        <Typography.Title level={3} style={{ margin: 0 }}>
-          Quan ly muon tra sach
+      <Space className="page-toolbar">
+        <Typography.Title level={3} className="page-heading">
+          Quản lý mượn trả sách
         </Typography.Title>
         <Button
           type="primary"
@@ -125,7 +125,7 @@ export default function BorrowsPage() {
             setOpenBorrow(true);
           }}
         >
-          Lap phieu muon
+          Lập phiếu mượn
         </Button>
       </Space>
 
@@ -133,16 +133,16 @@ export default function BorrowsPage() {
 
       <Modal
         open={openBorrow}
-        title="Lap phieu muon"
+        title="Lập phiếu mượn"
         onCancel={() => setOpenBorrow(false)}
         onOk={createBorrow}
-        okText="Luu"
+        okText="Lưu"
       >
         <Form form={borrowForm} layout="vertical">
-          <Form.Item name="reader_id" label="Doc gia" rules={[{ required: true }]}>
+          <Form.Item name="reader_id" label="Độc giả" rules={[{ required: true }]}>
             <Select options={readers.map((item) => ({ value: item.id, label: `${item.code} - ${item.full_name}` }))} />
           </Form.Item>
-          <Form.Item name="copy_id" label="Ban sao sach" rules={[{ required: true }]}>
+          <Form.Item name="copy_id" label="Bản sao sách" rules={[{ required: true }]}>
             <Select
               options={availableCopies.map((item) => ({
                 value: item.id,
@@ -150,31 +150,31 @@ export default function BorrowsPage() {
               }))}
             />
           </Form.Item>
-          <Form.Item name="borrowed_at" label="Ngay muon" rules={[{ required: true }]}>
+          <Form.Item name="borrowed_at" label="Ngày mượn" rules={[{ required: true }]}>
             <DatePicker style={{ width: "100%" }} showTime />
           </Form.Item>
-          <Form.Item name="condition" label="Tinh trang luc muon">
-            <Input placeholder="Tot" />
+          <Form.Item name="condition" label="Tình trạng lúc mượn">
+            <Input placeholder="Tốt" />
           </Form.Item>
         </Form>
       </Modal>
 
       <Modal
         open={openReturn}
-        title="Tra sach"
+        title="Trả sách"
         onCancel={() => setOpenReturn(false)}
         onOk={submitReturn}
-        okText="Xac nhan tra"
+        okText="Xác nhận trả"
       >
         <Form form={returnForm} layout="vertical">
-          <Form.Item name="returned_at" label="Ngay tra" rules={[{ required: true }]}>
+          <Form.Item name="returned_at" label="Ngày trả" rules={[{ required: true }]}>
             <DatePicker style={{ width: "100%" }} showTime />
           </Form.Item>
-          <Form.Item name="status" label="Trang thai" rules={[{ required: true }]}>
+          <Form.Item name="status" label="Trạng thái" rules={[{ required: true }]}>
             <Select options={["RETURNED", "OVERDUE", "LOST"].map((item) => ({ value: item, label: item }))} />
           </Form.Item>
-          <Form.Item name="condition" label="Tinh trang luc tra">
-            <Input placeholder="Sach con tot" />
+          <Form.Item name="condition" label="Tình trạng lúc trả">
+            <Input placeholder="Sách còn tốt" />
           </Form.Item>
         </Form>
       </Modal>

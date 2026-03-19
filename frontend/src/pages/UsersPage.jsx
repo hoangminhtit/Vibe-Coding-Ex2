@@ -18,7 +18,7 @@ export default function UsersPage() {
       const response = await api.get("/users");
       setRows(response.data);
     } catch (error) {
-      message.error(error?.response?.data?.detail || "Khong tai duoc nguoi dung");
+      message.error(error?.response?.data?.detail || "Không tải được người dùng");
     } finally {
       setLoading(false);
     }
@@ -51,52 +51,52 @@ export default function UsersPage() {
           role: values.role,
           is_active: values.is_active,
         });
-        message.success("Cap nhat nhan vien thanh cong");
+        message.success("Cập nhật nhân viên thành công");
       } else {
         await api.post("/users", values);
-        message.success("Tao tai khoan nhan vien thanh cong");
+        message.success("Tạo tài khoản nhân viên thành công");
       }
 
       setOpen(false);
       await loadData();
     } catch (error) {
-      message.error(error?.response?.data?.detail || "Luu tai khoan that bai");
+      message.error(error?.response?.data?.detail || "Lưu tài khoản thất bại");
     }
   };
 
   const onDelete = async (id) => {
     try {
       await api.delete(`/users/${id}`);
-      message.success("Da xoa tai khoan");
+      message.success("Đã xóa tài khoản");
       await loadData();
     } catch (error) {
-      message.error(error?.response?.data?.detail || "Xoa tai khoan that bai");
+      message.error(error?.response?.data?.detail || "Xóa tài khoản thất bại");
     }
   };
 
   const columns = [
     { title: "Username", dataIndex: "username" },
-    { title: "Ho ten", dataIndex: "full_name" },
+    { title: "Họ tên", dataIndex: "full_name" },
     {
-      title: "Vai tro",
+      title: "Vai trò",
       dataIndex: "role",
       render: (value) => <Tag color={value === "ADMIN" ? "gold" : "blue"}>{value}</Tag>,
     },
     {
-      title: "Trang thai",
+      title: "Trạng thái",
       dataIndex: "is_active",
-      render: (value) => <Tag color={value ? "green" : "red"}>{value ? "Hoat dong" : "Ngung"}</Tag>,
+      render: (value) => <Tag color={value ? "green" : "red"}>{value ? "Hoạt động" : "Ngừng"}</Tag>,
     },
     {
-      title: "Thao tac",
+      title: "Thao tác",
       render: (_, record) => (
         <Space>
           <Button size="small" onClick={() => openEdit(record)}>
-            Sua
+            Sửa
           </Button>
-          <Popconfirm title="Xoa tai khoan nay?" onConfirm={() => onDelete(record.id)}>
+          <Popconfirm title="Xóa tài khoản này?" onConfirm={() => onDelete(record.id)}>
             <Button size="small" danger>
-              Xoa
+              Xóa
             </Button>
           </Popconfirm>
         </Space>
@@ -106,22 +106,22 @@ export default function UsersPage() {
 
   return (
     <div>
-      <Space style={{ marginBottom: 16, width: "100%", justifyContent: "space-between" }}>
-        <Typography.Title level={3} style={{ margin: 0 }}>
-          Quan ly nhan vien va tai khoan
+      <Space className="page-toolbar">
+        <Typography.Title level={3} className="page-heading">
+          Quản lý nhân viên và tài khoản
         </Typography.Title>
         <Button type="primary" onClick={openCreate}>
-          Them nhan vien
+          Thêm nhân viên
         </Button>
       </Space>
       <Table rowKey="id" columns={columns} dataSource={rows} loading={loading} />
 
       <Modal
         open={open}
-        title={editing ? "Cap nhat tai khoan" : "Tao tai khoan"}
+        title={editing ? "Cập nhật tài khoản" : "Tạo tài khoản"}
         onCancel={() => setOpen(false)}
         onOk={onSubmit}
-        okText="Luu"
+        okText="Lưu"
       >
         <Form form={form} layout="vertical">
           <Form.Item name="username" label="Username" rules={[{ required: true }]}>
@@ -132,14 +132,14 @@ export default function UsersPage() {
               <Input.Password />
             </Form.Item>
           ) : null}
-          <Form.Item name="full_name" label="Ho ten" rules={[{ required: true }]}>
+          <Form.Item name="full_name" label="Họ tên" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="role" label="Vai tro" rules={[{ required: true }]}>
+          <Form.Item name="role" label="Vai trò" rules={[{ required: true }]}>
             <Select options={roles.map((item) => ({ value: item, label: item }))} />
           </Form.Item>
           {editing ? (
-            <Form.Item name="is_active" label="Hoat dong" valuePropName="checked">
+            <Form.Item name="is_active" label="Hoạt động" valuePropName="checked">
               <Switch />
             </Form.Item>
           ) : null}
